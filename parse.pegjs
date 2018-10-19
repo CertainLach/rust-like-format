@@ -1,65 +1,58 @@
-format_string 
+format_string
 = t:text_wrap tt:( maybe_format text_wrap )* {
 	let res = [t];
-    [...tt.map(e=>[...e])].forEach(e=>res.push(...e));
-    for(let i=0;i<res.length-1;i++){
-    	if(res[i].type==='plain'&&res[i+1].type==='plain'){
-        	res[i].text+=res[i+1].text;
-            res.splice(i+1,1);
-            i--;
-       	}
-    }
-    return res;
+	[...tt.map(e=>[...e])].forEach(e=>res.push(...e))
+	return res;
 }
 text_wrap
 = text:text {
 	return {
-    	type:'plain',
-        text
-    };
+		type:'plain',
+		text
+	};
 }
-maybe_format 
+maybe_format
 = '{' '{' {
 	return {
-    	type:'plain',
-        text:'\u007b'
-    };
+		type:'plain',
+		text:'\u007b'
+	};
 }
 / '}' '}' {
 	return {
-    	type:'plain',
-        text:'\u007d'
-    };
+		type:'plain',
+		text:'\u007d'
+	};
 }
 / f:format {
 	return f;
 }
-format 
+format
 = '{' arg:( argument )? spec:( ':' format_spec )* '}' {
 	return {
-    	type:'format',
-        arg,
-        spec:spec&&spec.map(e=>e[1])
-    };
+		type:'format',
+		arg,
+		spec:spec&&spec.map(e=>e[1])
+	};
 }
-argument 
-= integer 
+argument
+= integer
 / identifier
 
-format_spec 
+format_spec
 = align:(fill:(fill)?align)?sign:(sign)?sharp:('#')?zero:('0')?width:(width)?precision:('.' precision)?type:(type)? {
 	return {
-    	align:align&&{
-        	fill:align[0],
-            align:align[1]
-        },
-        sign,
-        sharp: !!sharp,
-        zero: !!zero,
-        width,
-        precision:precision&&precision[1],
-        type
-    };
+		align:align&&{
+			fill:align[0],
+			align:align[1]
+		},
+		sign,
+		sharp: !!sharp,
+		zero: !!zero,
+		width,
+		precision:precision&&precision[1],
+		type
+	};
 }
 fill
 = character
@@ -74,43 +67,43 @@ precision
 type
 = name:identifier typeArgs: typeArgs? {
 	return {
-    	typeKind:'normal',
-       	name,
-       	typeArgs
-    };
+		typeKind:'normal',
+	   	name,
+	   	typeArgs
+	};
 }
 / '?' {
 	return {
-    	typeKind:'debug'
-    };
-} 
+		typeKind:'debug'
+	};
+}
 / '' {
 	return {
-    	typeKind:'any'
-    };
+		typeKind:'any'
+	};
 }
-typeArgs 
+typeArgs
 = '(' t:argument tt:( ',' argument )* ')' {
 	return [t,...tt.map(e=>e[1])];
 }
-count 
+count
 = parameter / integer
-parameter 
-= argument '$'
+parameter
+= par:argument '$' {return par}
 
-text 
+text
 = t:[a-zA-Z0-9_\- ]* {
 	return t.join('');
 }
-integer 
+integer
 = t:[0-9]+ {
 	return parseInt(t.join(''),10);
 }
-identifier 
-= t:[a-zA-Z]+ {
+identifier
+= t:[a-zA-Z0-9]+ {
 	return t.join('');
 }
-character 
+character
 = t:[a-zA-Z0-9] {
 	return t;
 }
