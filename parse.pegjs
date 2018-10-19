@@ -6,13 +6,24 @@ format_string
 }
 text_wrap
 = text:text {
-	return {type:'plain',text}
+	return {
+    	type:'plain',
+        text
+    }
 }
 maybe_format 
 = '{' '{' {
-	return {type:'plain',text:'\u007b'};
+	return {
+    	type:'plain',
+        text:'\u007b'
+    };
 }
-/ '}' '}' {return {type:'plain',text:'\u007d'};}
+/ '}' '}' {
+	return {
+    	type:'plain',
+        text:'\u007d'
+    };
+}
 / f:format {
 	return f
 }
@@ -68,18 +79,16 @@ type
 	return {typeKind:'any'}
 }
 typeArgs 
-= '(' t:arg tt:( ',' arg )* ')' {
+= '(' t:argument tt:( ',' argument )* ')' {
 	return [t,...tt.map(e=>e[1])]
 }
-arg 
-= text
 count 
 = parameter / integer
 parameter 
 = argument '$'
 
 text 
-= t:[a-zA-Z ]* {return t.join('')}
+= t:[a-zA-Z0-9_\- ]* {return t.join('')}
 integer 
 = t:[0-9]+ {return parseInt(t.join(''),10)}
 identifier 
