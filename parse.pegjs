@@ -9,12 +9,20 @@ text_wrap
 	return {type:'plain',text}
 }
 maybe_format 
-= '{' '{' 
-/ '}' '}' 
-/ f:format {return f}
+= '{' '{' {
+	return {type:'plain',text:'\u007b'};
+}
+/ '}' '}' {return {type:'plain',text:'\u007d'};}
+/ f:format {
+	return f
+}
 format 
 = '{' arg:( argument )? spec:( ':' format_spec )* '}' {
-	return {type:'format',arg,spec:spec&&spec.map(e=>e[1])}
+	return {
+    	type:'format',
+        arg,
+        spec:spec&&spec.map(e=>e[1])
+    }
 }
 argument 
 = integer 
@@ -35,11 +43,16 @@ format_spec
         type
     }
 }
-fill = character
-align = '<' / '^' / '>'
-sign = '+' / '-'
-width = count
-precision = count / '*'
+fill
+= character
+align
+= '<' / '^' / '>'
+sign
+= '+' / '-'
+width
+= count
+precision
+= count / '*'
 type
 = name:identifier typeArgs: typeArgs? {
 	return {
@@ -69,5 +82,7 @@ text
 = t:[a-zA-Z ]* {return t.join('')}
 integer 
 = t:[0-9]+ {return parseInt(t.join(''),10)}
-identifier = t:[a-zA-Z]+ {return t.join('')}
-character = t:[a-zA-Z0-9] {return t}
+identifier 
+= t:[a-zA-Z]+ {return t.join('')}
+character 
+= t:[a-zA-Z0-9] {return t}
