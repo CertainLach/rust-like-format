@@ -9,7 +9,7 @@ text_wrap
 	return {
     	type:'plain',
         text
-    }
+    };
 }
 maybe_format 
 = '{' '{' {
@@ -25,7 +25,7 @@ maybe_format
     };
 }
 / f:format {
-	return f
+	return f;
 }
 format 
 = '{' arg:( argument )? spec:( ':' format_spec )* '}' {
@@ -33,7 +33,7 @@ format
     	type:'format',
         arg,
         spec:spec&&spec.map(e=>e[1])
-    }
+    };
 }
 argument 
 = integer 
@@ -52,7 +52,7 @@ format_spec
         width,
         precision:precision&&precision[1],
         type
-    }
+    };
 }
 fill
 = character
@@ -70,17 +70,21 @@ type
     	typeKind:'normal',
        	name,
        	typeArgs
-    }
+    };
 }
 / '?' {
-	return {typeKind:'debug'}
+	return {
+    	typeKind:'debug'
+    };
 } 
 / '' {
-	return {typeKind:'any'}
+	return {
+    	typeKind:'any'
+    };
 }
 typeArgs 
 = '(' t:argument tt:( ',' argument )* ')' {
-	return [t,...tt.map(e=>e[1])]
+	return [t,...tt.map(e=>e[1])];
 }
 count 
 = parameter / integer
@@ -88,10 +92,18 @@ parameter
 = argument '$'
 
 text 
-= t:[a-zA-Z0-9_\- ]* {return t.join('')}
+= t:[a-zA-Z0-9_\- ]* {
+	return t.join('');
+}
 integer 
-= t:[0-9]+ {return parseInt(t.join(''),10)}
+= t:[0-9]+ {
+	return parseInt(t.join(''),10);
+}
 identifier 
-= t:[a-zA-Z]+ {return t.join('')}
+= t:[a-zA-Z]+ {
+	return t.join('');
+}
 character 
-= t:[a-zA-Z0-9] {return t}
+= t:[a-zA-Z0-9] {
+	return t;
+}
