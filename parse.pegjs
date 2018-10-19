@@ -1,7 +1,14 @@
 format_string 
 = t:text_wrap tt:( maybe_format text_wrap )* {
 	let res = [t];
-    [...tt.map(e=>[...e])].forEach(e=>res.push(...e))
+    [...tt.map(e=>[...e])].forEach(e=>res.push(...e));
+    for(let i=0;i<res.length-1;i++){
+    	if(res[i].type==='plain'&&res[i+1].type==='plain'){
+        	res[i].text+=res[i+1].text;
+            res.splice(i+1,1);
+            i--;
+       	}
+    }
     return res;
 }
 text_wrap
